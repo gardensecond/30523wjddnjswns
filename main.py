@@ -1,4 +1,4 @@
-# streamlit_app.py
+# main.py
 
 import streamlit as st
 import pandas as pd
@@ -7,22 +7,31 @@ import plotly.express as px
 # 페이지 설정
 st.set_page_config(page_title="Plotly 시각화 웹앱", layout="wide")
 
-# 데이터 불러오기
+st.title("📊 CSV 데이터 Plotly 시각화 웹앱")
+
+# 데이터 불러오기 함수
 @st.cache_data
 def load_data():
     url = "https://drive.google.com/uc?export=download&id=1pwfON6doXyH5p7AOBJPfiofYlni0HVVY"
-    df = pd.read_csv(url)  # 또는 read_excel(url) 파일 형식에 따라 다르게
+    df = pd.read_csv(url)
     return df
 
+# 데이터 로드
 df = load_data()
 
-# 데이터 보여주기
+# 데이터 미리보기
 st.subheader("데이터 미리보기")
 st.dataframe(df)
 
-# 컬럼 선택
-numeric_columns = df.select_dtypes(include='number').columns.tolist()
-if len(numeric_columns) < 2:
-    st.warning("시각화를 위해 수치형 열이 2개 이상 필요합니다.")
+# 수치형 컬럼 선택해서 시각화
+numeric_cols = df.select_dtypes(include='number').columns.tolist()
+
+if len(numeric_cols) >= 2:
+    st.subheader("📈 시각화 설정")
+    x_col = st.selectbox("X축 선택", numeric_cols, index=0)
+    y_col = st.selectbox("Y축 선택", numeric_cols, index=1)
+
+    fig = px.scatter(df, x=x_col, y=y_col, title=f"{x_col} vs {y_col} 산점도")
+    st.plotly_chart(fig, use_container_width=True)
 else:
-    x_col = st._
+    st.warning("시각화를 위해 수치형 컬럼이 2개 이상 있어야 합니다.")
