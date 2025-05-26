@@ -1,29 +1,21 @@
-# main.py
-
 import streamlit as st
 import pandas as pd
 import plotly.express as px
 
-# 페이지 설정
 st.set_page_config(page_title="Plotly 시각화 웹앱", layout="wide")
+st.title("📊 Excel 데이터 Plotly 시각화 웹앱")
 
-st.title("📊 CSV 데이터 Plotly 시각화 웹앱")
-
-# 데이터 불러오기 함수
 @st.cache_data
 def load_data():
     url = "https://drive.google.com/uc?export=download&id=1pwfON6doXyH5p7AOBJPfiofYlni0HVVY"
-    df = pd.read_csv(url)
+    df = pd.read_excel(url, engine='openpyxl')  # 엑셀 파일 읽기용
     return df
 
-# 데이터 로드
 df = load_data()
 
-# 데이터 미리보기
 st.subheader("데이터 미리보기")
 st.dataframe(df)
 
-# 수치형 컬럼 선택해서 시각화
 numeric_cols = df.select_dtypes(include='number').columns.tolist()
 
 if len(numeric_cols) >= 2:
