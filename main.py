@@ -1,21 +1,14 @@
 import streamlit as st
 import pandas as pd
 import plotly.express as px
-import gdown
-import os
 
 st.set_page_config(page_title="Plotly 시각화 웹앱", layout="wide")
-st.title("📊 Excel 데이터 Plotly 시각화 웹앱")
+st.title("📊 CSV 데이터 Plotly 시각화 웹앱")
 
 @st.cache_data
 def load_data():
     url = "https://drive.google.com/uc?export=download&id=1pwfON6doXyH5p7AOBJPfiofYlni0HVVY"
-    output = "data.xlsx"
-    
-    if not os.path.exists(output):
-        gdown.download(url, output, quiet=False)
-    
-    df = pd.read_excel(output, engine='openpyxl')
+    df = pd.read_csv(url)
     return df
 
 df = load_data()
